@@ -3,6 +3,10 @@ import Die from './Die';
 import './Dice.css';
 
 class Dice extends Component {
+  constructor(props){
+    super(props);
+    
+  }
   render() {
     return <div className="Dice">
       {this.props.dice.map((d, idx) =>
