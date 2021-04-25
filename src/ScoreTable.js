@@ -5,9 +5,19 @@ import { ones, twos, threes, fours, fives, sixes, threeOfKind, fourOfKind, fullH
 
 
 class ScoreTable extends Component {
-
   render() {
     const { scores, doScore } = this.props;
+    function sum ( scores ) {
+      const keys = Object.keys(scores);
+      let sum = 0;
+
+      keys.forEach((key, index) => {
+        if ( scores[key] !== undefined ) {
+          sum += parseFloat(scores[key]);
+        }
+      });
+      return sum;
+    }
 
     return (
       <div className="ScoreTable">
@@ -37,6 +47,9 @@ class ScoreTable extends Component {
               <RuleRow name="Chance" score={scores.chance} doScore={evt => doScore("chance", chance.evalRoll)} />
             </tbody>
           </table>
+        </section>
+        <section className="ScoreTable-section ScoreTable-section-score">
+          <h2>Score: {sum(scores)} </h2>
         </section>
       </div>
     )

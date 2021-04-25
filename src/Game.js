@@ -13,6 +13,7 @@ class Game extends Component {
       dice: Array.from({ length: NUM_DICE }),
       locked: Array(NUM_DICE).fill(false),
       rollsLeft: NUM_ROLLS,
+      rolling: false,
       scores: {
         ones: undefined,
         twos: undefined,
@@ -31,18 +32,27 @@ class Game extends Component {
     };
     this.roll = this.roll.bind(this);
     this.doScore = this.doScore.bind(this);
+    this.reset = this.reset.bind(this);
     this.toggleLocked = this.toggleLocked.bind(this);
   }
 
   roll(evt) {
     // roll dice whose indexes are in reroll
     this.setState(st => ({
+      rolling: true,
       dice: st.dice.map((d, i) =>
         st.locked[i] ? d : Math.ceil(Math.random() * 6)
       ),
       locked: st.rollsLeft > 1 ? st.locked : Array(NUM_DICE).fill(true),
       rollsLeft: st.rollsLeft - 1
     }));
+    console.log("first:",this.state)
+    setTimeout(() => {
+      this.setState(st => ({
+        rolling: false,
+      }));
+      console.log("after 1 sec:",this.state);
+    }, 1000);
   }
 
   toggleLocked(idx) {
@@ -58,7 +68,6 @@ class Game extends Component {
 
   doScore(rulename, ruleFn) {
     // evaluate this ruleFn with the dice and score this rulename
-    console.log("ruleFn:", ruleFn(this.state.dice));
     this.setState(st => ({
       scores: { ...st.scores, [rulename]: ruleFn(this.state.dice) },
       rollsLeft: NUM_ROLLS, //***WHEN SCORING, YOU RESET THE NUMBER OF ROLLS
@@ -67,7 +76,13 @@ class Game extends Component {
     this.roll();
   }
 
+  reset(){
+    //resets the game 
+  }
+
+
   render() {
+
     return (
       <div className='Game'>
         <header className='Game-header'>
@@ -78,6 +93,7 @@ class Game extends Component {
               dice={this.state.dice}
               locked={this.state.locked}
               handleClick={this.toggleLocked}
+              rolling={this.state.rolling}
             />
             <div className='Game-button-wrapper'>
               <button
@@ -90,8 +106,11 @@ class Game extends Component {
             </div>
           </section>
         </header>
+        
         <ScoreTable doScore={this.doScore} scores={this.state.scores} />
+        {Object.values(this.state.scores).indexOf(undefined) > -1 ? "" : <button onClick={this.reset}>Game Over: Play again?</button>}
       </div>
+      
     );
   }
 }
