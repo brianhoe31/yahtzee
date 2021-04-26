@@ -41,7 +41,7 @@ class RuleRow extends Component {
     let ruleName = this.props.name.toLowerCase().replace(/\s/g, '');
 
     return (
-      <tr className={this.state.clicked ? "RuleRow RuleRow-disabled" : "RuleRow RuleRow-active"}  onClick={this.handleClick}>
+      <tr className={`RuleRow RuleRow-${this.state.clicked ? 'disabled' : 'active'}`}  onClick={this.handleClick}>
         <td className="RuleRow-name">{this.props.name}</td>
         <td className="RuleRow-score">{this.state.clicked ? this.props.score : this.props.rule[ruleName]}</td>
       </tr>
